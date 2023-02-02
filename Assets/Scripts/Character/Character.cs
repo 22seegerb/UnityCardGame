@@ -16,6 +16,8 @@ public class Character : MonoBehaviour
     [SerializeField] private Attribute damage;
     public Attribute Damage { get => damage; }
 
+    private List<Status> status = new List<Status>();
+
     public float TakeDamage(float damage) {
         health.Value -= damage;
         return damage;
@@ -23,5 +25,13 @@ public class Character : MonoBehaviour
 
     private void Start() {
         health.Refill();
+    }
+
+    private void EvaluateStatus() {
+        for (int i = status.Count - 1; i >= 0; i--) {
+            if (!status[i].Tick(this)) {
+                status.RemoveAt(i);
+            }
+        }
     }
 }

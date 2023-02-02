@@ -44,7 +44,9 @@ public class VariableAttribute : Attribute
     // Set the base value, ensuring that it's properly in the bounds before editing the boost so that the full
     // value is also within the bounds.
     protected override void SetBase(float b) {
+        float oldMax = GetMax();
         baseVal = b;
+        val -= (GetMax() - oldMax);
     }
 
     // Gets the boost
@@ -53,7 +55,9 @@ public class VariableAttribute : Attribute
     }
     // Sets the boost value, then ensures it's properly within the bounds.
     protected override void SetBoost(float b) {
+        float oldMax = GetMax();
         boost = b;
+        val -= (GetMax() - oldMax);
     }
 
     // Gets the mod
@@ -62,14 +66,18 @@ public class VariableAttribute : Attribute
     }
     // Sets the mod, sometimes going above max. If this occurs, when getting the value it will still be the maximum value.
     protected override void SetMod(float b) {
+        float oldMax = GetMax();
         mod = b;
+        val -= (GetMax() - oldMax);
     }
 
     private float GetMax() {
         return (baseVal + boost) * mod;
     }
     private void SetMax(float b) {
+        float oldMax = GetMax();
         boost = b / mod - baseVal;
+        val -= (b - oldMax);
     }
 
     public void Refill() {
